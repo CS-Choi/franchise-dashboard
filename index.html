@@ -1111,7 +1111,7 @@ function manualSave(){
   btn.textContent = '💾 저장 중...';
   btn.classList.add('saving');
   btn.disabled = true;
-  saveStoresToSheet(function(ok){
+  Commit changes(function(ok){
     btn.textContent = ok ? '✅ 저장 완료!' : '❌ 저장 실패';
     setTimeout(()=>{
       btn.textContent = '💾 저장하기';
@@ -1121,7 +1121,7 @@ function manualSave(){
   });
 }
 
-function saveStoresToSheet(callback){
+function Commit changes(callback){
   const SAVE_URL = 'https://script.google.com/macros/s/AKfycbza1fP1AnCTOzPncu_wO4YF8njOonyHurGuq4eK-Pq-s2xh4ePniJuCr3RNPc9D-lzP8Q/exec?action=saveStores';
   fetch(SAVE_URL, {
     method: 'POST',
