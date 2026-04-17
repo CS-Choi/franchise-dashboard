@@ -1673,7 +1673,41 @@ function removeRoute(i){
 
 document.getElementById('storeModal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
 document.getElementById('routeModal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeRouteModal(); });
+// (이 위에는 원래 있던 코드들이 쭉 있습니다)
 
+/* 👇👇 1. 여기에 우리가 만든 '심부름꾼 함수'를 붙여넣습니다 👇👇 */
+function loadStoresFromSheet() {
+  showSyncBar('구글 시트에서 매장 정보를 불러오는 중...', 'loading');
+
+  const LOAD_URL = APPS_SCRIPT_URL + '?action=getStores';
+
+  fetch(LOAD_URL)
+    .then(res => res.json())
+    .then(data => {
+      // 구글이 준 포장지(data) 안에 ok 사인이 있고, stores 데이터가 있다면?
+      if(data && data.ok && Array.isArray(data.stores)) {
+        stores = data.stores; // 진짜 매장 리스트만 쏙 빼서 내 창고에 넣습니다.
+      }
+      renderAll(); // 데이터 다 받았으니 화면을 그립니다.
+      showSyncBar('매장 정보 연동 완료!', 'success');
+      hideSyncBar(3000);
+    })
+    .catch(err => {
+      console.error('시트 로드 에러:', err);
+      showSyncBar('매장 정보 불러오기 실패 (인터넷 확인)', 'error');
+      hideSyncBar(3000);
+    });
+}
+/* 👆👆 여기까지 👆👆 */
+
+
+// ── 초기화 ───────────────────────────────────────────────────────────────────
+syncAllSheets();
+// 👇 2. 아까 바꿨던 것처럼, 맨 마지막에 심부름꾼을 출발시키는 코드도 꼭 있어야 합니다!
+loadStoresFromSheet();
+</script>
+
+</body></html>
 // ── 초기화 ───────────────────────────────────────────────────────────────────
 renderAll();
 syncAllSheets();
